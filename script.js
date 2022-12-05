@@ -69,11 +69,25 @@ function checkColumn(colIndex){
     return hasDuplicates(colInputList);
 }
 function checkRegions(){
-    let isRegionCorrect = true;
     let currentBoard = getCurrentBoard();
-
-    //boardInputList[Math.floor(row / 3) * 3 + Math.floor(i / 3)][Math.floor(col / 3) * 3 + i % 3]
+    for(let i = 0; i < grid.length; i++){
+        for(let j = 0; j < grid.length; j++){
+            if (!isRegionValid(currentBoard, i - i %3, j - j %3)){ return false; }
+        }
+    }
     return true
+}
+
+function  isRegionValid(board, startRow, startCol){
+    let st = new Set();
+    for(let row = 0; row < 3; row++){
+        for(let col = 0; col < 3; col++){
+            let curr = board[row + startRow][col + startCol];
+            if (st.has(curr)){ return false; }
+            if (curr != '.'){ st.add(curr); }
+        }
+    }
+    return true;
 }
 
 function getCurrentBoard() {
@@ -86,7 +100,6 @@ function getCurrentBoard() {
         }
         boardInputRowList.push(boardInputColList);
     }
-    console.log(boardInputRowList);
     return boardInputRowList;
 }
 
@@ -95,9 +108,8 @@ function hasDuplicates(array) {
 }
 
 function showOutput(isGridOk){
-    console.log(isGridOk);
     let resultDiv = document.getElementById('result_div');
-    if(!isGridOk){
+    if(isGridOk){
         resultDiv.innerHTML ="Sudoku is correct !";
     } else {
         resultDiv.innerHTML ="Sudoku is incorrect, try again";
